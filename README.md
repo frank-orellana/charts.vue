@@ -9,7 +9,7 @@ If you want a version that works with Vue 2 go to [Charts.vue2](https://github.c
 
 ## Installation
 ```sh
-npm i chart.js charts.vue
+npm i chart.js@next charts.vue
 ```
 
 ## Simple usage:
@@ -19,7 +19,7 @@ npm i chart.js charts.vue
 ```js
 import Chart from 'charts.vue';
 ...
-components : [Chart]
+components : {Chart}
 ...
 //data:
 labels : ['1','2','3'],

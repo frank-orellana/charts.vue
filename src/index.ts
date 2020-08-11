@@ -1,8 +1,17 @@
-import Chart from 'chart.js';
+import {Chart, Arc,BarController,BubbleController,CategoryScale,DoughnutController,Filler,Interaction,Legend,Line,LineController,LinearScale,LogarithmicScale,PieController,Point,PolarAreaController,RadarController,RadialLinearScale,Rectangle,Scale,ScatterController,Ticks,TimeScale,TimeSeriesScale,Title,Tooltip}  from 'chart.js';
 import {h} from 'vue';
 
+Chart.register(
+	LineController, Line, Point, LinearScale, CategoryScale, Title, Tooltip, Filler, Legend,
+	BarController, Rectangle,
+	RadarController, RadialLinearScale,
+	PieController, Arc,
+	PolarAreaController,
+	BubbleController,
+	ScatterController);
+
 class data {
-	static ctx = null as unknown as HTMLCanvasElement;
+	static canvas = null as unknown as HTMLCanvasElement;
 	static chart = null as unknown as Chart;
 }
 
@@ -52,7 +61,7 @@ export default {
 	},
 	data() {
 		return {
-			ctx : null as unknown as HTMLCanvasElement,
+			canvas : null as unknown as HTMLCanvasElement,
 			chart : null as unknown as Chart
 		};
 	},
@@ -105,10 +114,17 @@ export default {
 	},
 	mounted: function () {
 		const _this = (this as unknown as t);
-		_this.ctx = _this.$el as HTMLCanvasElement;
+		_this.canvas = _this.$el.childNodes[0] as HTMLCanvasElement;
+		const ctx = _this.canvas.getContext('2d');
+
+		if(ctx == null){
+			console.error('Could not acquire context from canvas: ', _this.canvas);
+			return;
+		}
 		
-		console.log(_this.ctx, _this.type, _this.chartData, _this.options);
-		_this.chart = new Chart(_this.ctx, {
+		console.log(_this.canvas, _this.canvas.getContext('2d'), _this.type, _this.chartData, { labels: _this.labels, datasets: _this.datasets }, _this.options);
+		if(_this.canvas.getContext('2d') != null)
+		_this.chart = new Chart(ctx, {
 			type: _this.type,
 			data: _this.labels ? { labels: _this.labels, datasets: _this.datasets } : _this.chartData,
 			options: _this.options
@@ -116,9 +132,9 @@ export default {
 	},
 	render: function () {
 		const _this = (this as unknown as t);
-		return h('canvas', {
+		return h('div', {
 			style : {width: _this.width,height: _this.height}
-		});
+		},h('canvas'));
 	}
 };
 

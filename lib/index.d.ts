@@ -1,9 +1,9 @@
-import Chart from 'chart.js';
+import { Chart } from 'chart.js';
 declare const _default: {
     props: {
         type: string;
-        labels: (string | number | string[] | number[] | Date | Date[] | import("moment").Moment | import("moment").Moment[])[] | undefined;
-        datasets: Chart.ChartDataSets[] | ChartDataSets[] | undefined;
+        labels: any;
+        datasets: any;
         chartData: ChartData;
         options: ChartOptions;
         width: {
@@ -16,8 +16,8 @@ declare const _default: {
         };
     };
     data(): {
-        ctx: HTMLCanvasElement;
-        chart: Chart;
+        canvas: HTMLCanvasElement;
+        chart: any;
     };
     watch: {
         chartData: {
@@ -49,7 +49,9 @@ declare const _default: {
         update(): void;
     };
     mounted: () => void;
-    render: () => import("vue").VNode<import("vue").RendererNode, import("vue").RendererElement>;
+    render: () => import("vue").VNode<import("vue").RendererNode, import("vue").RendererElement, {
+        [key: string]: any;
+    }>;
 };
 export default _default;
 declare type cdatasets = Chart.ChartDataSets;

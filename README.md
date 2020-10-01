@@ -39,3 +39,8 @@ For a full guide of the options you can go to [Chart.js][chartjs-url]
 [npm-img]: https://img.shields.io/npm/v/charts.vue.svg
 [npm-url]: https://npmjs.com/package/charts.vue
 [chartjs-url]: https://www.chartjs.org/docs/next/index
+
+## Development
+build for development and watch: `npm run dev`
+
+building: `npm run build`

@@ -1,5 +1,6 @@
-import {Chart, Arc,BarController,BubbleController,CategoryScale,DoughnutController,Filler,Interaction,Legend,Line,LineController,LinearScale,LogarithmicScale,PieController,Point,PolarAreaController,RadarController,RadialLinearScale,Rectangle,Scale,ScatterController,Ticks,TimeScale,TimeSeriesScale,Title,Tooltip}  from 'chart.js';
-import {h} from 'vue';
+import { Chart, Arc, BarController, BubbleController, CategoryScale, DoughnutController, Filler, Interaction, Legend, Line, LineController, LinearScale, LogarithmicScale, PieController, Point, PolarAreaController, RadarController, RadialLinearScale, Rectangle, Scale, ScatterController, Ticks, TimeScale, TimeSeriesScale, Title, Tooltip } from 'chart.js';
+import { IChartData, IChartDataset, IChartConfiguration, IChartOptions } from 'chart.js';
+import { h, defineComponent } from 'vue';
 
 Chart.register(
 	LineController, Line, Point, LinearScale, CategoryScale, Title, Tooltip, Filler, Legend,
@@ -10,49 +11,16 @@ Chart.register(
 	BubbleController,
 	ScatterController);
 
-class data {
-	static canvas = null as unknown as HTMLCanvasElement;
-	static chart = null as unknown as Chart;
-}
-
-const params = {
-	type!: String as unknown as string,
-	labels: Array as unknown as ChartData["labels"],
-	datasets!: Array as unknown as ChartData["datasets"] | ChartDataSets[],
-	chartData!: Object as unknown as ChartData,
-	options!: Object as ChartOptions,
-	width!: {
-		type: String,
-		default: '400'
-	},
-	height!: {
-		type: String,
-		default: '400'
-	},
-};
-
-interface methods {
-	update() : void;
-}
-
-//Only needed attributes to get type inference without importing vue
-interface vue {
-	$el: any;
-	$attrs : any;
-}
-
-declare type t = typeof params & typeof data & methods & vue;
-
-export default {
+export default defineComponent({
 	props: {
-		type!: String as unknown as string,
-		labels: Array as unknown as ChartData["labels"],
-		datasets!: Array as unknown as ChartData["datasets"] | ChartDataSets[],
-		chartData!: Object as unknown as ChartData,
-		options!: Object as ChartOptions,
+		type: {type: String, default: 'line' },
+		labels: {type: Array }, //as unknown as ChartData["labels"]
+		datasets!: {type: Array}, // as unknown as ChartData["datasets"] | IChartDataset[],
+		chartData!: {type: Object}, // as unknown as ChartData,
+		options!: {type: Object}, // as ChartOptions,
 		width!: {
 			type: String,
-			default: '400px'
+			default: '100%'
 		},
 		height!: {
 			type: String,
@@ -61,98 +29,91 @@ export default {
 	},
 	data() {
 		return {
-			canvas : null as unknown as HTMLCanvasElement,
-			chart : null as unknown as Chart
+			canvas: null as unknown as HTMLCanvasElement,
+			chart: null as unknown as Chart
 		};
 	},
 	watch: {
 		'chartData': {
 			deep: true,
 			handler() {
-				const _this = (this as unknown as t);
-				_this.chart.data = _this.chartData;
-				_this.update();
+				this.chart.data = this.chartData;
+				this.update();
 			}
 		},
 		'type': {
 			handler() {
-				const _this = (this as unknown as t);
-				_this.chart.config.type = _this.type;
-				_this.update();
+				this.chart.config.type = this.type;
+				this.update();
 			}
 		},
 		'labels': {
 			handler() {
-				const _this = (this as unknown as t);
-				_this.chart.data.labels = _this.labels;
-				_this.update();
+				this.chart.data.labels = this.labels as string[];
+				this.update();
 			}
 		},
 		'datasets': {
 			deep: true,
 			handler() {
-				const _this = (this as unknown as t);
-				_this.chart.data.datasets = _this.datasets as ChartData["datasets"];
-				_this.update();
+				this.chart.data.datasets = this.datasets as ChartData["datasets"];
+				this.update();
 			}
 		},
 		'options': {
 			deep: true,
 			handler() {
-				const _this = (this as unknown as t);
-				_this.chart.options = _this.options;
-				_this.update();
+				this.chart.options = this.options;
+				this.update();
 			}
 		},
-		'width': { handler() { (this as unknown as t).update() } },
-		'height': { handler() { (this as unknown as t).update() } }
+		'width': { handler() { this.update() } },
+		'height': { handler() { this.update() } }
 	},
 	methods: {
 		update() {
-			(this as unknown as t).chart.update();
+			this.chart.update();
 		}
 	},
 	mounted: function () {
-		const _this = (this as unknown as t);
-		_this.canvas = _this.$el.childNodes[0] as HTMLCanvasElement;
-		const ctx = _this.canvas.getContext('2d');
+		this.canvas = this.$el.childNodes[0] as HTMLCanvasElement;
+		const ctx = this.canvas.getContext('2d');
 
-		if(ctx == null){
-			console.error('Could not acquire context from canvas: ', _this.canvas);
+		if (ctx == null) {
+			console.error('Could not acquire context from canvas: ', this.canvas);
 			return;
 		}
-		
-		console.log(_this.canvas, _this.canvas.getContext('2d'), _this.type, _this.chartData, { labels: _this.labels, datasets: _this.datasets }, _this.options);
-		if(_this.canvas.getContext('2d') != null)
-		_this.chart = new Chart(ctx, {
-			type: _this.type,
-			data: _this.labels ? { labels: _this.labels, datasets: _this.datasets } : _this.chartData,
-			options: _this.options
-		});
+
+		//console.log(this.canvas, this.canvas.getContext('2d'), this.type, this.chartData, { labels: this.labels, datasets: this.datasets }, this.options);
+		if (this.canvas.getContext('2d') != null)
+			this.chart = new Chart(ctx, {
+				type: this.type,
+				data: (this.labels ? { labels: this.labels, datasets: this.datasets } : this.chartData) as IChartData,
+				options: this.options
+			});
 	},
 	render: function () {
-		const _this = (this as unknown as t);
 		return h('div', {
-			style : {width: _this.width,height: _this.height}
-		},h('canvas'));
+			style: { width: this.width, height: this.height }
+		}, h('canvas'));
 	}
-};
+});
 
-type cdatasets = Chart.ChartDataSets;
+type cdatasets = IChartDataset;
 
-export interface ChartDataSets extends cdatasets {
-	readonly data: cdatasets["data"]; 
+export interface ChartDatasets extends cdatasets {
+	readonly data: cdatasets["data"];
 }
 
-export interface ChartData extends Chart.ChartData {
-	readonly labels: Chart.ChartData["labels"];
-	readonly datasets: Chart.ChartData["datasets"];
+export interface ChartData extends IChartData {
+	readonly labels: IChartData["labels"];
+	readonly datasets: IChartData["datasets"];
 }
 
-export interface ChartOptions extends Chart.ChartOptions {
+export interface ChartOptions extends IChartOptions {
 
 }
 
-export interface ChartConfiguration extends Chart.ChartConfiguration {
+export interface ChartConfiguration extends IChartConfiguration {
 
 }

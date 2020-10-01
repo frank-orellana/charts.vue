@@ -1,5 +1,5 @@
 import { Chart } from 'chart.js';
-import { IChartData, IChartDataset, IChartConfiguration, IChartOptions } from 'chart.js';
+import { IChartData, IChartConfiguration } from 'chart.js';
 declare const _default: import("vue").DefineComponent<{
     type: {
         type: StringConstructor;
@@ -27,7 +27,7 @@ declare const _default: import("vue").DefineComponent<{
     };
 }, unknown, {
     canvas: HTMLCanvasElement;
-    chart: Chart<number, string, IChartConfiguration<string, number, string, IChartDataset<number, {}>, {}>>;
+    chart: Chart<"line" | "bar" | "bubble" | "doughnut" | "pie" | "polarArea" | "radar" | "scatter", unknown[], string>;
 }, {}, {
     update(): void;
 }, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, Record<string, any>, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<{
@@ -45,15 +45,9 @@ declare const _default: import("vue").DefineComponent<{
     height: string;
 }>;
 export default _default;
-declare type cdatasets = IChartDataset;
-export interface ChartDatasets extends cdatasets {
-    readonly data: cdatasets["data"];
-}
 export interface ChartData extends IChartData {
     readonly labels: IChartData["labels"];
     readonly datasets: IChartData["datasets"];
-}
-export interface ChartOptions extends IChartOptions {
 }
 export interface ChartConfiguration extends IChartConfiguration {
 }

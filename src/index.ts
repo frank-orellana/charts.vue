@@ -11,6 +11,8 @@ Chart.register(
 	BubbleController,
 	ScatterController);
 
+declare type ChartType = "line" | "bar" | "bubble" | "doughnut" | "pie" | "polarArea" | "radar" | "scatter";
+
 export default defineComponent({
 	props: {
 		type: {type: String, default: 'line' },
@@ -37,13 +39,13 @@ export default defineComponent({
 		'chartData': {
 			deep: true,
 			handler() {
-				this.chart.data = this.chartData;
+				this.chart.data = this.chartData as ChartData;
 				this.update();
 			}
 		},
 		'type': {
 			handler() {
-				this.chart.config.type = this.type;
+				this.chart.config.type = this.type as ChartType;
 				this.update();
 			}
 		},
@@ -63,7 +65,7 @@ export default defineComponent({
 		'options': {
 			deep: true,
 			handler() {
-				this.chart.options = this.options;
+				this.chart.options = this.options as IChartOptions;
 				this.update();
 			}
 		},
@@ -87,7 +89,7 @@ export default defineComponent({
 		//console.log(this.canvas, this.canvas.getContext('2d'), this.type, this.chartData, { labels: this.labels, datasets: this.datasets }, this.options);
 		if (this.canvas.getContext('2d') != null)
 			this.chart = new Chart(ctx, {
-				type: this.type,
+				type: this.type as ChartType,
 				data: (this.labels ? { labels: this.labels, datasets: this.datasets } : this.chartData) as IChartData,
 				options: this.options
 			});
@@ -101,17 +103,9 @@ export default defineComponent({
 
 type cdatasets = IChartDataset;
 
-export interface ChartDatasets extends cdatasets {
-	readonly data: cdatasets["data"];
-}
-
 export interface ChartData extends IChartData {
 	readonly labels: IChartData["labels"];
 	readonly datasets: IChartData["datasets"];
-}
-
-export interface ChartOptions extends IChartOptions {
-
 }
 
 export interface ChartConfiguration extends IChartConfiguration {

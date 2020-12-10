@@ -1,12 +1,13 @@
-import { Chart, Arc, BarController, BubbleController, CategoryScale, DoughnutController, Filler, Interaction, Legend, Line, LineController, LinearScale, LogarithmicScale, PieController, Point, PolarAreaController, RadarController, RadialLinearScale, Rectangle, Scale, ScatterController, Ticks, TimeScale, TimeSeriesScale, Title, Tooltip } from 'chart.js';
-import { IChartData, IChartDataset, IChartConfiguration, IChartOptions } from 'chart.js';
+import { Chart, LineElement, BarController, BarElement, BubbleController, CategoryScale, DoughnutController, Filler, Interaction, Legend, LineController, LinearScale, LogarithmicScale, PieController, Point, PolarAreaController, RadarController, RadialLinearScale, Scale, ScatterController, Ticks, TimeScale, TimeSeriesScale, Title, Tooltip, PointElement } from 'chart.js';
+import * as chart from 'chart.js'; 
 import { h, defineComponent } from 'vue';
 
 Chart.register(
-	LineController, Line, Point, LinearScale, CategoryScale, Title, Tooltip, Filler, Legend,
-	BarController, Rectangle,
+	LineController, LineElement, LinearScale, CategoryScale, Title, Tooltip, Filler, Legend,
+	BarController, BarElement,
 	RadarController, RadialLinearScale,
-	PieController, Arc,
+	PieController,
+	PointElement,
 	PolarAreaController,
 	BubbleController,
 	ScatterController);
@@ -65,7 +66,7 @@ export default defineComponent({
 		'options': {
 			deep: true,
 			handler() {
-				this.chart.options = this.options as IChartOptions;
+				this.chart.options = this.options as chart.ChartOptions;
 				this.update();
 			}
 		},
@@ -90,7 +91,7 @@ export default defineComponent({
 		if (this.canvas.getContext('2d') != null)
 			this.chart = new Chart(ctx, {
 				type: this.type as ChartType,
-				data: (this.labels ? { labels: this.labels, datasets: this.datasets } : this.chartData) as IChartData,
+				data: (this.labels ? { labels: this.labels, datasets: this.datasets } : this.chartData) as chart.ChartData,
 				options: this.options
 			});
 	},
@@ -101,13 +102,13 @@ export default defineComponent({
 	}
 });
 
-type cdatasets = IChartDataset;
+type cdatasets = chart.ChartDataset;
 
-export interface ChartData extends IChartData {
-	readonly labels: IChartData["labels"];
-	readonly datasets: IChartData["datasets"];
+export interface ChartData extends chart.ChartData {
+	readonly labels: chart.ChartData["labels"];
+	readonly datasets: chart.ChartData["datasets"];
 }
 
-export interface ChartConfiguration extends IChartConfiguration {
+export interface ChartConfiguration extends chart.ChartConfiguration {
 
 }

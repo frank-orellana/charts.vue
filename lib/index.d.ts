@@ -1,5 +1,6 @@
 import { Chart } from 'chart.js';
-import { IChartData, IChartConfiguration } from 'chart.js';
+import * as chart from 'chart.js';
+declare type ChartType = "line" | "bar" | "bubble" | "doughnut" | "pie" | "polarArea" | "radar" | "scatter";
 declare const _default: import("vue").DefineComponent<{
     type: {
         type: StringConstructor;
@@ -27,7 +28,7 @@ declare const _default: import("vue").DefineComponent<{
     };
 }, unknown, {
     canvas: HTMLCanvasElement;
-    chart: Chart<"line" | "bar" | "bubble" | "doughnut" | "pie" | "polarArea" | "radar" | "scatter", unknown[], string>;
+    chart: Chart<ChartType, unknown[], unknown>;
 }, {}, {
     update(): void;
 }, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, Record<string, any>, string, import("vue").VNodeProps & import("vue").AllowedComponentProps & import("vue").ComponentCustomProps, Readonly<{
@@ -45,10 +46,10 @@ declare const _default: import("vue").DefineComponent<{
     height: string;
 }>;
 export default _default;
-export interface ChartData extends IChartData {
-    readonly labels: IChartData["labels"];
-    readonly datasets: IChartData["datasets"];
+export interface ChartData extends chart.ChartData {
+    readonly labels: chart.ChartData["labels"];
+    readonly datasets: chart.ChartData["datasets"];
 }
-export interface ChartConfiguration extends IChartConfiguration {
+export interface ChartConfiguration extends chart.ChartConfiguration {
 }
 //# sourceMappingURL=index.d.ts.map
